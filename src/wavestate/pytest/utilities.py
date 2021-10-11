@@ -44,7 +44,6 @@ def relfile_root(_file_, request, pre = None, post = None):
     if isinstance(pre, (list, tuple)):
         pre = path.join(pre)
 
-    print("TEST", request.node.module.__name__)
     testname = request.node.name
     if pre is not None:
         testname = path.join(pre, testname)

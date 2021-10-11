@@ -8,14 +8,20 @@ from os import path
 from shutil import rmtree
 import contextlib
 
+import sys
 import pytest
+import subprocess
 
 from . import utilities
 from .utilities import Timer  # noqa
+from ._version import version, __version__, version_info
+
 
 _options_added = False
 
 def pytest_addoption(parser):
+    # ensure that if this is run multiple times in conftest.py at
+    # varying levels, that it doesn't conflict
     global _options_added
     if _options_added:
         return
@@ -187,11 +193,6 @@ def test_trigger():
 
 
 @pytest.fixture
-def browser(request):
-    return request.config.getvalue('--browser')
-
-
-@pytest.fixture
 def dprint(request, tpath_join):
     """
     This is a fixture providing a wrapper function for pretty printing. It uses
@@ -201,27 +202,63 @@ def dprint(request, tpath_join):
     Along with printing to stdout, this function prints into the tpath_folder to
     save all output into output.txt.
     """
-    fname = tpath_join('output.txt')
-
     # pushes past the dot
     print('---------------:{}:--------------'.format(request.node.name))
-    with open(fname, 'w') as F:
-        def dprint(*args, **kwargs):
-            utilities.dprint(*args, F = F, **kwargs)
 
-        import builtins
-        builtins.dprint = dprint
-        yield dprint
-        return
+    import builtins
+    builtins.dprint = utilities.dprint
+    yield utilities.dprint
+    return
 
 
 @pytest.fixture
-def algo_log(tpath):
-    from transient.model.system import algo_log
-    return algo_log.LoggingAlgorithm(
-        log_level = 9,
-        log_folder = tpath,
-    )
+def capture(tpath_join):
+    """ Fixture that tee's stdout and stderr from python to write into the test folder.
+
+    pytest already includes some of this functionality via its --capture line and
+    capsys builtin fixtures. Users often want both real time printing of output
+    with the pytest `-s` as well as capturing output into tpath test folders.
+    This function provides both, but does not capture stdout or stderr from
+    subprocesses or any direct file IO.
+
+    If imported and used, tpath_join must also be imported and used.
+    """
+    stdout = sys.stdout
+    stderr = sys.stderr
+
+    fname = tpath_join('capture.txt')
+    with open(fname, 'w') as F:
+        class TeeOut(object):
+            def write(self, data):
+                F.write(data)
+                stdout.write(data)
+
+            def writelines(self, lines):
+                F.writelines(lines)
+                stdout.writelines(lines)
+
+            def flush(self):
+                self.file.flush()
+                stdout.flush()
+
+        class TeeErr(object):
+            def write(self, data):
+                F.write('\nSTDERR: '.join(data.split('\n')))
+                stderr.write(data)
+
+            def writelines(self, lines):
+                F.writelines(['STDERR: ' + d for d in lines])
+                stderr.writelines(lines)
+
+            def flush(self):
+                self.file.flush()
+                stderr.flush()
+
+        sys.stdout = TeeOut()
+        sys.stderr = TeeErr()
+        yield
+        sys.stdout = stdout
+        sys.stderr = stderr
 
 
 def tpath_root_make(request, root_folder, local_folder):
@@ -236,3 +273,23 @@ def fpath_raw_make(request):
     if isinstance(request.node, pytest.Function):
         return os.path.split(request.node.function.__code__.co_filename)[0]
     raise RuntimeError("fpath currently only works for functions")
+
+
+__all__ = [
+    'version',
+    '__version__',
+    'version_info',
+    'pytest_addoption',
+    'plot',
+    'tpath',
+    'tpath_join',
+    'fpath',
+    'fpath_join',
+    'tpath_preclear',
+    'closefigs',
+    'test_trigger',
+    'dprint',
+    'capture',
+    'tpath_root_make',
+    'fpath_raw_make',
+]

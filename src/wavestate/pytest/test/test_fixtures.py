@@ -7,13 +7,22 @@
 # with details inline in source files, comments, and docstrings.
 """
 """
+import sys
 from wavestate.pytest import ( # noqa
-    dprint, tpath_join, tpath, plot, fpath
+    dprint, tpath_join, tpath, plot, fpath, capture
 )
 
 
-def test_pytest_tpath(tpath_join, fpath):
+def test_pytest_tpath(tpath_join, fpath, dprint, capture):
     with open(tpath_join('test.txt'), 'w') as f:
         f.write('test\n')
 
+    print('test output')
+    print('test output')
+    print('test output')
+    print('test output')
+    print('test output', file=sys.stderr)
+    print('test output')
+    print('test output')
+    print('test output' )
     return
