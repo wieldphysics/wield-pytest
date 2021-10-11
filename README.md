@@ -1,9 +1,7 @@
-WaveState
-----------
+wavestate.pytest
+------------------
 
-This is a collection of projects under the wavestate package namespace for
-modeling interferometers, circuits, quantum states, and control systems. This is
-the base metapackage to install the others.
+A set of pytest fixtures and helpers used in the wavestate packages and their test suites.
 
-It's version will be updated as subpackages are migrated into the namespace.
+The main purpose of these fixtures is to enable tests to better store and side-effects such as plots and outputs. This helps the pytest test suite to be used and developed more like a Jupyter (or other) notebook.
 
