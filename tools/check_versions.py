@@ -38,7 +38,10 @@ spec.loader.exec_module(module)
 def check_versions():
     exit = None
 
-    if module.__version__ != version_string:
+    # use the version_info as the base, as it is unaffected by the setuptools_scm
+    module_version = '.'.join(str(v) for v in module.version_info)
+
+    if module_version != version_string:
         print("WARNING: Stated module version different than setup.py version", file = sys.stderr)
         print("         '{0}' != '{1}'".format(module.__version__, version_string), file = sys.stderr)
         print("Fix version.py and setup.py for consistency")
