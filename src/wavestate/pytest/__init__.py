@@ -15,7 +15,6 @@ import contextlib
 
 import sys
 import pytest
-import subprocess
 
 from . import utilities
 from .utilities import Timer  # noqa

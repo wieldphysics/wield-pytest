@@ -44,16 +44,17 @@ def relfile_root(_file_, request, pre = None, post = None):
     if isinstance(pre, (list, tuple)):
         pre = path.join(pre)
 
-    testname = request.node.name
+    testname = path.join(request.node.module.__name__, request.node.name)
     if pre is not None:
         testname = path.join(pre, testname)
 
     if isinstance(post, (list, tuple)):
         post = path.join(post)
+
     if post is not None:
-        return path.join(request.config.rootpath, testname, request.node.module.__name__, post)
+        return path.join(request.config.rootpath, testname, post)
     else:
-        return path.join(request.config.rootpath, testname, request.node.module.__name__)
+        return path.join(request.config.rootpath, testname)
 
 
 def relfile_test(_file_, request, pre = None, post = None, fname = None):
