@@ -18,12 +18,13 @@ except ImportError:
 
 try:
     from IPython.lib.pretty import pretty
+
     pformat = pretty
 except ImportError:
     from pprint import pformat
 
 
-def relfile(_file_, *args, fname = None):
+def relfile(_file_, *args, fname=None):
     fpath = path.split(_file_)[0]
     post = path.join(*args)
     fpath = path.join(fpath, post)
@@ -36,7 +37,7 @@ def relfile(_file_, *args, fname = None):
         return path.join(fpath, fname)
 
 
-def relfile_root(_file_, request, pre = None, post = None):
+def relfile_root(_file_, request, pre=None, post=None):
     """
     Generates a folder specific to py.test function
     (provided by using the "request" fixture in the test's arguments)
@@ -57,7 +58,7 @@ def relfile_root(_file_, request, pre = None, post = None):
         return path.join(request.config.rootpath, testname)
 
 
-def relfile_test(_file_, request, pre = None, post = None, fname = None):
+def relfile_test(_file_, request, pre=None, post=None, fname=None):
     """
     Generates a folder specific to py.test function
     (provided by using the "request" fixture in the test's arguments)
@@ -72,9 +73,9 @@ def relfile_test(_file_, request, pre = None, post = None, fname = None):
     if isinstance(post, (list, tuple)):
         post = path.join(post)
     if post is not None:
-        return relfile(_file_, testname, post, fname = fname)
+        return relfile(_file_, testname, post, fname=fname)
     else:
-        return relfile(_file_, testname, fname = fname)
+        return relfile(_file_, testname, fname=fname)
 
 
 class Timer(object):
@@ -87,18 +88,16 @@ class Timer(object):
         self.interval = self.end - self.start
 
 
-def dprint(*args, F = None, pretty = True, **kwargs):
+def dprint(*args, F=None, pretty=True, **kwargs):
     outs = []
     if pretty:
         for arg in args:
-            outs.append(
-                pformat(arg)
-            )
+            outs.append(pformat(arg))
     else:
         outs = args
 
     if icecream is not None:
-        icecream.DEFAULT_OUTPUT_FUNCTION(' '.join(outs), **kwargs)
+        icecream.DEFAULT_OUTPUT_FUNCTION(" ".join(outs), **kwargs)
     else:
         print(*outs, **kwargs)
 
@@ -111,4 +110,3 @@ class Timer(object):
     def __exit__(self, *args):
         self.end = time.clock()
         self.interval = self.end - self.start
-
