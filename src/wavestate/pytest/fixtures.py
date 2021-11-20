@@ -49,7 +49,7 @@ def tpath(request):
     os.makedirs(tpath_root, exist_ok=True)
     os.utime(tpath_root, None)
 
-    tpath_rel = os.path.relpath(tpath_root, os.path.split(tpath_local)[0])
+    tpath_rel = os.path.relpath(os.path.realpath(tpath_root), os.path.realpath(os.path.split(tpath_local)[0]))
     if os.path.islink(tpath_local):
         if os.path.normpath(
             os.path.join(os.path.split(tpath_local)[0], os.readlink(tpath_local))
@@ -86,7 +86,7 @@ def tpath_join(request):
             os.utime(tpath_root, None)
             first_call = False
 
-            tpath_rel = os.path.relpath(tpath_root, os.path.split(tpath_local)[0])
+            tpath_rel = os.path.relpath(os.path.realpath(tpath_root), os.path.realpath(os.path.split(tpath_local)[0]))
             if os.path.islink(tpath_local):
                 if os.path.normpath(
                     os.path.join(
