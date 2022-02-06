@@ -11,4 +11,3 @@
 version_info = (0, 9, 0)
 version = '.'.join(str(v) for v in version_info)
 __version__ = version
-
