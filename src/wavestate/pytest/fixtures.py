@@ -131,10 +131,9 @@ def fpath_join(request):
     return join_func
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def closefigs():
     import matplotlib.pyplot as plt
-
     yield
     plt.close("all")
 
@@ -201,53 +200,113 @@ def dprint(request, tpath_join):
     return
 
 
+# variable that stores the current node and capture filename information
+_node_capture = None
+
+
 @pytest.fixture
-def capture(tpath_join):
-    """Fixture that tee's stdout and stderr from python to write into the test folder.
+def capture(request, tpath_join):
+    """ Fixture that stores the output into tpath_join('capture.txt').
 
-    pytest already includes some of this functionality via its --capture line and
-    capsys builtin fixtures. Users often want both real time printing of output
-    with the pytest `-s` as well as capturing output into tpath test folders.
-    This function provides both, but does not capture stdout or stderr from
-    subprocesses or any direct file IO.
-
-    If imported and used, tpath_join must also be imported and used.
+    This must coordinate with pytest_runtest_logreport to function. It passes
+    required information.
     """
-    stdout = sys.stdout
-    stderr = sys.stderr
 
-    fname = tpath_join("capture.txt")
-    with open(fname, "w") as F:
+    ### This is a previous implementation
+    # in principle, this could check of the "-s"
+    # command line option was used, and fall back to
+    # this method if so
+    # the new method is compatible with the html plugin
 
-        class TeeOut(object):
-            def write(self, data):
-                F.write(data)
-                stdout.write(data)
+    #stdout = sys.stdout
+    #stderr = sys.stderr
 
-            def writelines(self, lines):
-                F.writelines(lines)
-                stdout.writelines(lines)
+    #fname = tpath_join("capture.txt")
+    #with open(fname, "w") as F:
 
-            def flush(self):
-                self.file.flush()
-                stdout.flush()
+    #    class TeeOut(object):
+    #        """
+    #        """
+    #        def write(self, data):
+    #            F.write(data)
+    #            stdout.write(data)
 
-        class TeeErr(object):
-            def write(self, data):
-                F.write("\nSTDERR: ".join(data.split("\n")))
-                stderr.write(data)
+    #        def writelines(self, lines):
+    #            F.writelines(lines)
+    #            stdout.writelines(lines)
 
-            def writelines(self, lines):
-                F.writelines(["STDERR: " + d for d in lines])
-                stderr.writelines(lines)
+    #        def flush(self):
+    #            self.file.flush()
+    #            stdout.flush()
 
-            def flush(self):
-                self.file.flush()
-                stderr.flush()
+    #        def isatty(self):
+    #            return stdout.isatty()
 
-        sys.stdout = TeeOut()
-        sys.stderr = TeeErr()
+    #        def fileno(self):
+    #            return stdout.fileno()
+
+    #        def __getattr__(self, name):
+    #            # grab all to fix pdb issues
+    #            return getattr(stdout, name)
+
+    #    class TeeErr(object):
+    #        def write(self, data):
+    #            F.write("\nSTDERR: ".join(data.split("\n")))
+    #            stderr.write(data)
+
+    #        def writelines(self, lines):
+    #            F.writelines(["STDERR: " + d for d in lines])
+    #            stderr.writelines(lines)
+
+    #        def flush(self):
+    #            self.file.flush()
+    #            stderr.flush()
+
+    #    sys.stdout = TeeOut()
+    #    sys.stderr = TeeErr()
+    #    yield
+    #    sys.stdout = stdout
+    #    sys.stderr = stderr
+    yield
+    global _node_capture
+    _node_capture = request.node.nodeid, tpath_join("capture.txt")
+    return
+
+
+@contextlib.contextmanager
+def ws_tracemalloc_impl():
+    # TODO, this should possibly go in a separate fixture with a wider scope
+    import tracemalloc
+    tracemalloc.start()
+    yield
+
+    snapshot = tracemalloc.take_snapshot()
+    top_stats = snapshot.statistics('lineno')
+
+    print("[ Top 10 ]")
+    for stat in top_stats[:10]:
+        print(stat)
+
+@pytest.fixture()
+def ws_tracemalloc():
+    """
+    Prints the 10 largest memory consumers at the end of each test.
+
+    NOTE: this is an autouse fixture, so if it is imported, all of the tests in a module will use it. This
+    is convenient for debugging.
+    
+    It is useful for debugging memory leaks that break the test suite. Often they can come from Matplotlib.
+    """
+    with ws_tracemalloc_impl():
         yield
-        sys.stdout = stdout
-        sys.stderr = stderr
 
+@pytest.fixture(autouse=True)
+def ws_tracemalloc_auto():
+    """
+    Prints the 10 largest memory consumers at the end of each test.
+
+    NOTE: this is an autouse fixture, so if it is imported, all of the tests in a module will use it. This
+    is convenient for debugging.
+    """
+    with ws_tracemalloc_impl():
+        yield
