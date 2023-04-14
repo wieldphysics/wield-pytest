@@ -1,7 +1,7 @@
-wavestate.pytest
+wield.pytest
 ====================
 
-A set of pytest fixtures and helpers used in the wavestate packages and their
+A set of pytest fixtures and helpers used in the python wield packages and their
 test suites.
 
 A primary purpose of these fixtures is to enable tests to better store and
