@@ -68,7 +68,6 @@ def tpath(request):
     return tpath_root
 
 
-@pytest.fixture
 def tpath_join(request):
     """
     Fixture that joins subpaths to the value of the special test-specific folder for test
@@ -106,6 +105,11 @@ def tpath_join(request):
         return path.join(tpath_root, *subpath)
 
     return tpath_joiner
+
+
+tpath_join_ = tpath_join
+# make it into a fixture
+tpath_join = pytest.fixture(tpath_join)
 
 
 @pytest.fixture
@@ -205,7 +209,7 @@ _node_capture = None
 
 
 @pytest.fixture
-def capture(request, tpath_join):
+def capture(request):
     """ Fixture that stores the output into tpath_join('capture.txt').
 
     This must coordinate with pytest_runtest_logreport to function. It passes
@@ -269,7 +273,8 @@ def capture(request, tpath_join):
     #    sys.stderr = stderr
     yield
     global _node_capture
-    _node_capture = request.node.nodeid, tpath_join("capture.txt")
+    # funny notation on tpath_join_ is because it is designed to be a fixture
+    _node_capture = request.node.nodeid, tpath_join_(request)("capture.txt")
     return
 
 
