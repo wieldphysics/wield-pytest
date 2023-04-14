@@ -8,7 +8,7 @@
 """
 """
 import sys
-from wavestate.pytest import dprint, tpath_join, tpath, plot, fpath, capture  # noqa
+from wield.pytest import dprint, tpath_join, tpath, plot, fpath, capture  # noqa
 
 
 def test_pytest_tpath(tpath_join, fpath, dprint, capture):

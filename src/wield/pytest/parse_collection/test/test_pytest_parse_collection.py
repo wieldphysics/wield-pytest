@@ -9,13 +9,13 @@
 """
 import subprocess
 
-from wavestate.pytest.fixtures import (  # noqa
+from wield.pytest.fixtures import (  # noqa
     dprint,
     tpath_join,
     fpath_join
 )
 
-from wavestate.pytest.parse_collection import pytest_collection_parse
+from wield.pytest.parse_collection import pytest_collection_parse
 
 def test_pytest_split_collection(tpath_join, fpath_join, dprint):
 
@@ -38,7 +38,7 @@ def test_pytest_collection_run(tpath_join, fpath_join):
         [
             'python3',
             '-m',
-            'wavestate.pytest.parse_collection',
+            'wield.pytest.parse_collection',
             fpath_join("./collection_clean.txt")
         ],
         # capture_output = True,

@@ -11,7 +11,7 @@ import os
 import re
 import sys
 import argparse
-from wavestate.pytest.parse_collection.parse import pytest_collection_parse
+from wield.pytest.parse_collection.parse import pytest_collection_parse
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(

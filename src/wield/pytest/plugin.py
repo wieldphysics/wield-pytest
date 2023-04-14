@@ -10,9 +10,9 @@
 """
 import pytest
 import os
-import wavestate.pytest
-import wavestate.pytest.fixtures
-from wavestate.pytest.fixtures import (  # noqa
+import wield.pytest
+import wield.pytest.fixtures
+from wield.pytest.fixtures import (  # noqa
     tpath,
     closefigs,
     capture,
@@ -24,19 +24,19 @@ def pytest_addoption(parser):
     def IFO():
         parser.addoption("--IFO", default="", help="IFO's to run (default:all)")
 
-    def wavestate_collectonly():
+    def wield_collectonly():
         parser.addoption(
-            "--wavestate-collect-only", "--ws-co", dest="ws_collectonly", action="store_true", default=None,
-            help="Print test items in a custom format for wavestate"
+            "--wield-collect-only", "--ws-co", dest="ws_collectonly", action="store_true", default=None,
+            help="Print test items in a custom format for wield"
         )
 
     def WS_SKIP_SLOW():
         parser.addoption("--ws-skip-slow", action="store_true", help="Skip slow tests (marked with ws_slow)")
 
-    wavestate.pytest.pytest_addoption(
+    wield.pytest.pytest_addoption(
         parser,
         IFO=IFO,
-        wavestate_collectonly=wavestate_collectonly,
+        wield_collectonly=wield_collectonly,
         WS_SKIP_SLOW=WS_SKIP_SLOW
     )
 
@@ -83,9 +83,9 @@ def pytest_runtest_logreport(report):
     """
     yield
     if report.when == 'teardown':
-        # print("HOOKWRAP", report.nodeid, wavestate.pytest.fixtures._node_capture)
-        if wavestate.pytest.fixtures._node_capture is not None:
-            nodeid_from, location_from = wavestate.pytest.fixtures._node_capture
+        # print("HOOKWRAP", report.nodeid, wield.pytest.fixtures._node_capture)
+        if wield.pytest.fixtures._node_capture is not None:
+            nodeid_from, location_from = wield.pytest.fixtures._node_capture
             if report.nodeid == nodeid_from:
                 # text = report.longreprtext or report.full_text
                 with open(location_from, "w") as F:
@@ -99,8 +99,8 @@ def pytest_configure(config):
     """
     Setup collectonly
     """
-    # run wavestate's as well
-    from wavestate.pytest import pytest_configure
+    # run wield's as well
+    from wield.pytest import pytest_configure
     pytest_configure(config)
 
     if config.option.ws_collectonly is not None:

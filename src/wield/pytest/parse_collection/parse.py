@@ -9,7 +9,7 @@
 """
 import os
 import re
-from wavestate.bunch import Bunch
+from wield.bunch import Bunch
 import subprocess
 
 RE_item = re.compile(r'^(\s*)(\w+)::(.*)::(.*)$')

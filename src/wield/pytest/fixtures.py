@@ -5,7 +5,7 @@
 # SPDX-FileCopyrightText: © 2021 Lee McCuller <mcculler@mit.edu>
 # NOTICE: authors should document their contributions in concisely in NOTICE
 # with details inline in source files, comments, and docstrings.
-""" pytest modules for use with wavestate packages and dependent software
+""" pytest modules for use with wield packages and dependent software
 """
 import os
 from os import path
