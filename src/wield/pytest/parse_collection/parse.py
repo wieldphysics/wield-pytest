@@ -55,6 +55,11 @@ def pytest_collection_parse(fname):
 
                     fpath, fmod = os.path.split(itemname)
                     modname, modext = os.path.splitext(fmod)
+                    orig = tests.get(modname, None)
+                    if orig is not None:
+                        # keep more canonical names
+                        if 'src/' in orig:
+                            itempath = orig
                     tests[modname] = itempath
                     pass
                 elif itemtype == 'Function':
