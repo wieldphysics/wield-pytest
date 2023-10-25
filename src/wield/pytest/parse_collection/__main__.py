@@ -66,7 +66,7 @@ if __name__ == '__main__':
             for k, arr in arrs.items():
                 kmod='.'.join(k)
                 prefix="""
-{}:
+{}
 {}
 
 .. autosummary::
