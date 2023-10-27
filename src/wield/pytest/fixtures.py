@@ -32,7 +32,10 @@ def tpath_preclear(request):
     before running each test. This cleans up the test data.
     """
     tpath_root, tpath_local = utilities.tpath_root_make(request)
-    no_preclear = request.config.getvalue("--no-preclear")
+    try:
+        no_preclear = request.config.getvalue("--no-preclear")
+    except ValueError:
+        no_preclear = False
     if not no_preclear:
         rmtree(tpath_root, ignore_errors=True)
     return
