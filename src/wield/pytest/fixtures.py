@@ -21,8 +21,14 @@ from . import utilities
 
 @pytest.fixture
 def plot(request):
-    return request.config.getvalue("--plot")
-    return request.config.option.plot
+    try:
+        return request.config.getvalue("--plot")
+        return request.config.option.plot
+    except ValueError:
+        import warnings
+        warnings.warn("Pytest is missing the --plot option. conftest.py should import or call pytest_addoption from wield.pytest.")
+        return False
+
 
 
 @pytest.fixture
