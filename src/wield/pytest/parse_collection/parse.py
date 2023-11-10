@@ -51,6 +51,7 @@ def pytest_collection_parse(fname):
                 elif itemtype == 'Module':
                     current_module = itemname
                     packages[current_package].append(current_module)
+                    # is this reset appropriate?
                     modules[current_module] = []
 
                     fpath, fmod = os.path.split(itemname)
@@ -65,11 +66,22 @@ def pytest_collection_parse(fname):
                 elif itemtype == 'Function':
                     current_function = itemname
                     modules[current_module].append(current_function)
+                # from having pytest-notebook
+                elif itemtype == 'JupyterNbCollector':
+                    fpath, fmod = os.path.split(itemname)
+                    modname, modext = os.path.splitext(fmod)
+                    orig = tests.get(modname, None)
+                    if orig is not None:
+                        # keep more canonical names
+                        if 'src/' in orig:
+                            itempath = orig
+                    tests[fmod] = itempath
+                elif itemtype == 'JupyterNbTest':
+                    pass
                 else:
-                    raise RuntimeError("Unrecognized Group Type")
+                    raise RuntimeError("Unrecognized Group Type {}, {}, {}".format(itemtype, itemname, itempath))
     if current_module is None:
         raise RuntimeError("Didn't parse any modules! Did the format change?")
-
 
     return Bunch(
         packages = packages,

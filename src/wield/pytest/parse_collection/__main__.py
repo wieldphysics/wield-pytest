@@ -22,13 +22,16 @@ if __name__ == '__main__':
     parser.add_argument('--api_rst', action='store_true', default=None, help='Create the autodoc API list')
     parser.add_argument('test', nargs='?', help='Test name')
 
-    #args = parser.parse_args(sys.argv[1:])
+    # args = parser.parse_args(sys.argv[1:])
     args = parser.parse_args()
 
     b = pytest_collection_parse(args.fname)
     if args.test is None:
         used_sort = False
         if args.api_rst:
+            """
+            This brach creates an RST file with all of the known test modules
+            """
             paths = []
             for t in b.tests:
                 tpath = os.path.splitext(b.tests[t])[0]
@@ -80,6 +83,9 @@ if __name__ == '__main__':
                 print()
             print()
         else:
+            """
+            This branch prints all of the tests to run. It uses the timing sort information if given
+            """
             if args.sort is not None:
                 try:
                     with open(args.sort) as Fsort:
