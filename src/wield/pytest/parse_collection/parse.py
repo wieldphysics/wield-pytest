@@ -22,6 +22,8 @@ def pytest_collection_parse(fname):
     modules = {}
     tests = {}
 
+    notebooks = set()
+
     current_package = None
     current_module = None
     last_indent = ""
@@ -75,7 +77,8 @@ def pytest_collection_parse(fname):
                         # keep more canonical names
                         if 'src/' in orig:
                             itempath = orig
-                    tests[fmod] = itempath
+                    tests[modname + "_" + modext[1:]] = itempath
+                    notebooks.add(itempath)
                 elif itemtype == 'JupyterNbTest':
                     pass
                 else:
@@ -87,6 +90,7 @@ def pytest_collection_parse(fname):
         packages = packages,
         modules = modules,
         tests = tests,
+        notebooks = notebooks,
     )
 
 

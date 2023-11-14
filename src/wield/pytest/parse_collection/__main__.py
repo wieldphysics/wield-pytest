@@ -34,7 +34,11 @@ if __name__ == '__main__':
             """
             paths = []
             for t in b.tests:
-                tpath = os.path.splitext(b.tests[t])[0]
+                tpath, ext = os.path.splitext(b.tests[t])
+
+                if ext != '.py':
+                    continue
+
                 tpath = tpath.split('src/')
                 tpath = tpath[-1]
                 tpath = tpath.replace('/', '.')
@@ -81,6 +85,25 @@ if __name__ == '__main__':
                 for a in arr:
                     print('   {}'.format(a))
                 print()
+            print()
+
+            print("""
+notebooks:
+----------------------
+
+""")
+            # loop through the list of notebook paths
+            for nb in sorted(b.notebooks):
+                print(" - ", ":doc:`{} <testing/{}>`".format(nb, os.path.splitext(nb)[0]))
+            print()
+            print("""
+.. toctree::
+   :maxdepth:1
+   :hidden:
+""")
+            # loop through the list of notebook paths
+            for nb in sorted(b.notebooks):
+                print("   ", "testing/{}".format(os.path.splitext(nb)[0]))
             print()
         else:
             """
