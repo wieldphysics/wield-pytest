@@ -94,7 +94,11 @@ notebooks:
 """)
             # loop through the list of notebook paths
             for nb in sorted(b.notebooks):
-                print(" - ", ":doc:`{} <testing/{}>`".format(nb, os.path.splitext(nb)[0]))
+                if not nb.startswith('docs/'):
+                    print(" - ", ":doc:`{} <testing/{}>`".format(nb, os.path.splitext(nb)[0]))
+                else:
+                    nb = nb[5:]
+                    print(" - ", ":doc:`{} <{}>`".format(nb, os.path.splitext(nb)[0]))
             print()
             print("""
 .. toctree::
@@ -103,7 +107,11 @@ notebooks:
 """)
             # loop through the list of notebook paths
             for nb in sorted(b.notebooks):
-                print("   ", "testing/{}".format(os.path.splitext(nb)[0]))
+                if not nb.startswith('docs/'):
+                    print("   ", "testing/{}".format(os.path.splitext(nb)[0]))
+                else:
+                    nb = nb[5:]
+                    print("   ", "{}".format(os.path.splitext(nb)[0]))
             print()
         else:
             """
