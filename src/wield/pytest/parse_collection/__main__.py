@@ -93,11 +93,12 @@ notebooks:
 
 """)
             # loop through the list of notebook paths
+            prefix = '../docs/'
             for nb in sorted(b.notebooks):
-                if not nb.startswith('docs/'):
+                if not nb.startswith(prefix):
                     print(" - ", ":doc:`{} <testing/{}>`".format(nb, os.path.splitext(nb)[0]))
                 else:
-                    nb = nb[5:]
+                    nb = nb.removeprefix(prefix)
                     print(" - ", ":doc:`{} <{}>`".format(nb, os.path.splitext(nb)[0]))
             print()
             print("""
@@ -107,10 +108,11 @@ notebooks:
 """)
             # loop through the list of notebook paths
             for nb in sorted(b.notebooks):
-                if not nb.startswith('docs/'):
+                if not nb.startswith(prefix):
                     print("   ", "testing/{}".format(os.path.splitext(nb)[0]))
                 else:
-                    nb = nb[5:]
+                    # remove '.
+                    nb = nb.removeprefix(prefix)
                     print("   ", "{}".format(os.path.splitext(nb)[0]))
             print()
         else:
