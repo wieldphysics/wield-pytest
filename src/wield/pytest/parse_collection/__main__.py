@@ -70,17 +70,23 @@ if __name__ == '__main__':
                 return arrs2
             arrs = split(paths)
 
+            print("""
+tests
+======================
+
+""")
+
             for k, arr in arrs.items():
                 kmod='.'.join(k)
-                prefix="""
-{}
-{}
+                prefix = """
+
+.. rubric:: {}
 
 .. autosummary::
    :recursive:
    :template: custom-module-template.rst
    :toctree: _autosummary
-""".format(kmod, '-'*(3 + len(kmod)))
+""".format(kmod)
                 print(prefix)
                 for a in arr:
                     print('   {}'.format(a))
@@ -88,8 +94,8 @@ if __name__ == '__main__':
             print()
 
             print("""
-notebooks:
-----------------------
+notebooks
+======================
 
 """)
             # loop through the list of notebook paths
