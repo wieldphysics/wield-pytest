@@ -108,7 +108,7 @@ def pytest_runtest_logreport(report):
                     #  Use full_text if longreprtext is None-ish
                     #   we added full_text elsewhere in this file.
                     text = report.longreprtext
-                    if text is not None:
+                    if text:
                         F.write('captured errors:\n')
                         F.write(text)
     # print("================== report A ====================")
