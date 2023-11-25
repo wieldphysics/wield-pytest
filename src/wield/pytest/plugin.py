@@ -88,6 +88,11 @@ def pytest_runtest_logreport(report):
             nodeid_from, location_from = wield.pytest.fixtures._node_capture
             if report.nodeid == nodeid_from:
                 # text = report.longreprtext or report.full_text
+
+                # make sure the folder exists
+                os.makedirs(os.path.split(location_from)[0], exist_ok=True)
+
+                # write the log content
                 with open(location_from, "w") as F:
                     F.write('status: {}\n'.format(report.outcome))
                     F.write('duration: {:.3f}s\n'.format(report.duration))
