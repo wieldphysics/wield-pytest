@@ -82,17 +82,38 @@ def pytest_runtest_logreport(report):
 
     """
     yield
-    if report.when == 'teardown':
+    if report.when == 'call':
         # print("HOOKWRAP", report.nodeid, wield.pytest.fixtures._node_capture)
         if wield.pytest.fixtures._node_capture is not None:
             nodeid_from, location_from = wield.pytest.fixtures._node_capture
             if report.nodeid == nodeid_from:
                 # text = report.longreprtext or report.full_text
                 with open(location_from, "w") as F:
+                    F.write('status: {}\n'.format(report.outcome))
+                    F.write('duration: {:.3f}s\n'.format(report.duration))
+
                     for section in report.sections:
                         header, content = section
                         F.write(header)
+                        F.write('\n')
                         F.write(content)
+                    # testing
+                    # longreprtext is only filled out on failure by pytest
+                    #    otherwise will be None.
+                    #  Use full_text if longreprtext is None-ish
+                    #   we added full_text elsewhere in this file.
+                    text = report.longreprtext
+                    if text is not None:
+                        F.write('captured errors:\n')
+                        F.write(text)
+    # print("================== report A ====================")
+    # print(report.when, report.nodeid, wield.pytest.fixtures._node_capture)
+    # print("================== report B ====================")
+    # print(report.sections)
+    # print("================== report C ====================")
+    # print(report.longreprtext)
+    # print("================== report D ====================")
+    return
 
 
 def pytest_configure(config):

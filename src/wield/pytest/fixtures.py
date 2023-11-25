@@ -280,10 +280,10 @@ def capture(request):
     #    yield
     #    sys.stdout = stdout
     #    sys.stderr = stderr
-    yield
     global _node_capture
     # funny notation on tpath_join_ is because it is designed to be a fixture
     _node_capture = request.node.nodeid, tpath_join_(request)("capture.txt")
+    yield
     return
 
 
