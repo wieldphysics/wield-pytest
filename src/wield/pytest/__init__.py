@@ -23,7 +23,7 @@ from .fixtures import (
     capture,
 )
 
-from .anywhere import tpathj, fpathj, dprint
+from .anywhere import tjoin, fjoin, dprint
 
 
 _options_added = {}
@@ -105,7 +105,7 @@ __all__ = [
     "fpath_raw_make",
     "Timer",
     "importskip",
-    "tpathj",
-    "fpathj",
+    "tjoin",
+    "fjoin",
     "dprint",
 ]

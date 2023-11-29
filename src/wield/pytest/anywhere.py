@@ -14,16 +14,16 @@ from . import utilities
 from . import fixtures
 
 
-def tpathj(*subpath):
+def tjoin(*subpath):
     """
     function that joins subpaths to the value of the special test-specific folder for test
     run data and plots. Usually created at the pytest.ini root folder and linked to
     the <folder of the test>/tresults/test_name/.
 
-    This function should be use like test_thing.save(tpathj('output_file.png'))
+    This function should be use like test_thing.save(tjoin('output_file.png'))
     """
     if not fixtures._pytest_request:
-        raise RuntimeError("tpathj must be used from within a pytest")
+        raise RuntimeError("tjoin must be used from within a pytest")
 
     request = fixtures._pytest_request[-1]
     tpath_root, tpath_local = utilities.tpath_root_make(request)
@@ -59,7 +59,7 @@ def tpathj(*subpath):
     return path.join(tpath_root, *subpath)
 
 
-def fpathj(*path):
+def fjoin(*path):
     """
     py.test fixture that runs os.path.join(path, *arguments) to merge subpaths
     with the folder path of the current test being run. Useful for referring to
@@ -67,7 +67,7 @@ def fpathj(*path):
     """
 
     if not fixtures._pytest_request:
-        raise RuntimeError("fpathj must be used from within a pytest")
+        raise RuntimeError("fjoin must be used from within a pytest")
 
     request = fixtures._pytest_request[-1]
     return os.path.join(utilities.fpath_raw_make(request), *path)
