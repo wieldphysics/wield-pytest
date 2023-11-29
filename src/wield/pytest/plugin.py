@@ -16,6 +16,7 @@ from wield.pytest.fixtures import (  # noqa
     tpath,
     closefigs,
     capture,
+    current_pytest_request,
 )
 
 
@@ -137,5 +138,8 @@ def pytest_configure(config):
 
     config.addinivalue_line(
         "markers", "ws_slow: mark test as slow (deselect with --ws-noslow)"
+    )
+    config.addinivalue_line(
+        "usefixtures", "current_pytest_request"
     )
 

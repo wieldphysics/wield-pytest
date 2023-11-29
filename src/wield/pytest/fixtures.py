@@ -225,65 +225,27 @@ def capture(request):
     required information.
     """
 
-    ### This is a previous implementation
-    # in principle, this could check of the "-s"
-    # command line option was used, and fall back to
-    # this method if so
-    # the new method is compatible with the html plugin
-
-    #stdout = sys.stdout
-    #stderr = sys.stderr
-
-    #fname = tpath_join("capture.txt")
-    #with open(fname, "w") as F:
-
-    #    class TeeOut(object):
-    #        """
-    #        """
-    #        def write(self, data):
-    #            F.write(data)
-    #            stdout.write(data)
-
-    #        def writelines(self, lines):
-    #            F.writelines(lines)
-    #            stdout.writelines(lines)
-
-    #        def flush(self):
-    #            self.file.flush()
-    #            stdout.flush()
-
-    #        def isatty(self):
-    #            return stdout.isatty()
-
-    #        def fileno(self):
-    #            return stdout.fileno()
-
-    #        def __getattr__(self, name):
-    #            # grab all to fix pdb issues
-    #            return getattr(stdout, name)
-
-    #    class TeeErr(object):
-    #        def write(self, data):
-    #            F.write("\nSTDERR: ".join(data.split("\n")))
-    #            stderr.write(data)
-
-    #        def writelines(self, lines):
-    #            F.writelines(["STDERR: " + d for d in lines])
-    #            stderr.writelines(lines)
-
-    #        def flush(self):
-    #            self.file.flush()
-    #            stderr.flush()
-
-    #    sys.stdout = TeeOut()
-    #    sys.stderr = TeeErr()
-    #    yield
-    #    sys.stdout = stdout
-    #    sys.stderr = stderr
     global _node_capture
     # funny notation on tpath_join_ is because it is designed to be a fixture
     _node_capture = request.node.nodeid, tpath_join_(request)("capture.txt")
     yield
+    return
+
+_pytest_request = []
+
+@pytest.fixture
+def current_pytest_request(request):
+    """ Fixture that stores the output into tpath_join('capture.txt').
+
+    This must coordinate with pytest_runtest_logreport to function. It passes
+    required information.
+    """
+
+    global _pytest_request
+    # funny notation on tpath_join_ is because it is designed to be a fixture
+    _pytest_request.append(request)
+    yield
+    _pytest_request.pop()
     return
 
 

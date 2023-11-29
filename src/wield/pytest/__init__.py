@@ -20,9 +20,10 @@ from .fixtures import (
     tpath_preclear,
     closefigs,
     test_trigger,
-    dprint,
     capture,
 )
+
+from .anywhere import tpathj, fpathj, dprint
 
 
 _options_added = {}
@@ -104,4 +105,7 @@ __all__ = [
     "fpath_raw_make",
     "Timer",
     "importskip",
+    "tpathj",
+    "fpathj",
+    "dprint",
 ]
