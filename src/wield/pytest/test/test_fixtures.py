@@ -8,11 +8,11 @@
 """
 """
 import sys
-from wield.pytest import dprint, tpath_join, tpath, plot, fpath, capture  # noqa
+from wield.pytest import dprint, tjoin, tpath, plot, fpath, capture  # noqa
 
 
-def test_pytest_tpath(tpath_join, fpath, dprint, capture):
-    with open(tpath_join("test.txt"), "w") as f:
+def test_pytest_tpath(tjoin, fpath, dprint, capture):
+    with open(tjoin("test.txt"), "w") as f:
         f.write("test\n")
 
     print("test output")

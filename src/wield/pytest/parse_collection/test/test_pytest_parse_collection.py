@@ -11,35 +11,35 @@ import subprocess
 
 from wield.pytest.fixtures import (  # noqa
     dprint,
-    tpath_join,
-    fpath_join
+    tjoin,
+    fjoin
 )
 
 from wield.pytest.parse_collection import pytest_collection_parse
 
-def test_pytest_split_collection(tpath_join, fpath_join, dprint):
+def test_pytest_split_collection(tjoin, fjoin, dprint):
 
-    b = pytest_collection_parse(fpath_join("./collection_errors.txt"))
+    b = pytest_collection_parse(fjoin("./collection_errors.txt"))
 
     dprint(b.modules)
     dprint(b.tests)
 
 
-    b = pytest_collection_parse(fpath_join("./collection_clean.txt"))
+    b = pytest_collection_parse(fjoin("./collection_clean.txt"))
 
     dprint(b.modules)
     dprint(b.tests)
     return
 
 
-def test_pytest_collection_run(tpath_join, fpath_join):
+def test_pytest_collection_run(tjoin, fjoin):
     print()
     out = subprocess.run(
         [
             'python3',
             '-m',
             'wield.pytest.parse_collection',
-            fpath_join("./collection_clean.txt")
+            fjoin("./collection_clean.txt")
         ],
         # capture_output = True,
     )
