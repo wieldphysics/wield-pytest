@@ -138,6 +138,8 @@ def pytest_configure(config):
 
     config.addinivalue_line(
         "markers", "ws_slow: mark test as slow (deselect with --ws-skip-slow)"
+    )
+    config.addinivalue_line(
         "markers", "largemem: mark test as using a lot of memory"
     )
     config.addinivalue_line(
