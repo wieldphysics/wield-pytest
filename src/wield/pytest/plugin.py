@@ -137,7 +137,8 @@ def pytest_configure(config):
             pass
 
     config.addinivalue_line(
-        "markers", "ws_slow: mark test as slow (deselect with --ws-noslow)"
+        "markers", "ws_slow: mark test as slow (deselect with --ws-skip-slow)"
+        "markers", "largemem: mark test as using a lot of memory"
     )
     config.addinivalue_line(
         "usefixtures", "current_pytest_request"
